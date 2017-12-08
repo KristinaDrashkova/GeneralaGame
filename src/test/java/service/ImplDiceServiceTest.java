@@ -14,5 +14,4 @@ public class ImplDiceServiceTest {
     @Test
     public void rollingDice() throws Exception {
     }
-
 }
