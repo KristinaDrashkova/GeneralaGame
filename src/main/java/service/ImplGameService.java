@@ -5,15 +5,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class ImplGameService implements GameService {
-    public void startGame(BufferedReader reader) throws IOException {
-        System.out.println("GameService started");
-        DiceService diceService = new ImplDiceService();
-        diceService.rollingDice(reader);
+    private DiceService diceService;
+    private BufferedReader bufferedReader;
+
+    public ImplGameService(DiceService diceService, BufferedReader bufferedReader) {
+        this.diceService = diceService;
+        this.bufferedReader = bufferedReader;
+    }
+
+    public void startGame() throws IOException {
+        System.out.println("Game started");
+        diceService.rollingDice(bufferedReader);
     }
 
 
     public void endGame() {
-        System.out.println("GameService ended");
+        System.out.println("Game ended");
     }
 
 }

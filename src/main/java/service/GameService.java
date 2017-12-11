@@ -1,9 +1,9 @@
 package service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 public interface GameService {
-    void startGame(BufferedReader reader) throws IOException;
+    void startGame() throws IOException;
+
     void endGame();
 }
