@@ -32,12 +32,13 @@ public class ImplGameService implements GameService {
                 counter++;
             }
             System.out.println(String.format("Your total roll is: %d", getResultSum(diceRolls)));
-            System.out.println("Would you like to roll again?{Y\\N}: ");
-            input = reader.readLine().trim().toUpperCase().charAt(0);
-            while (input != 'Y' && input != 'N') {
-                System.out.println("Invalid input. Please enter Y or N!");
-                input = reader.readLine().trim().toUpperCase().charAt(0);
-            }
+//            System.out.println("Would you like to roll again?{Y\\N}: ");
+//            input = reader.readLine().trim().toUpperCase().charAt(0);
+//            while (input != 'Y' && input != 'N') {
+//                System.out.println("Invalid input. Please enter Y or N!");
+//                input = reader.readLine().trim().toUpperCase().charAt(0);
+//            }
+            input = 'N';
         }
     }
 
