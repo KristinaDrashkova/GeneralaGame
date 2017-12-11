@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImplDiceService implements DiceService {
+
     public List<Integer> roll(int diceCount) {
         List<Integer> diceValues = new ArrayList<Integer>();
         while (diceCount-- > 0) {
@@ -20,11 +21,10 @@ public class ImplDiceService implements DiceService {
         for (Integer diceRoll : diceRolls) {
             sum += diceRoll;
         }
-
         return sum;
     }
 
-    public void rollingDice(BufferedReader reader) throws IOException {
+    public void rollingDiceIO(BufferedReader reader) throws IOException {
         char input = 'Y';
         while (input == 'Y') {
             int counter = 1;

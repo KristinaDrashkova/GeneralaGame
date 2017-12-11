@@ -9,5 +9,5 @@ public interface DiceService {
 
     int getResultSum(List<Integer> diceRolls);
 
-    void rollingDice(BufferedReader reader) throws IOException;
+    void rollingDiceIO(BufferedReader reader) throws IOException;
 }

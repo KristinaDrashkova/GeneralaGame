@@ -15,9 +15,8 @@ public class ImplGameService implements GameService {
 
     public void startGame() throws IOException {
         System.out.println("Game started");
-        diceService.rollingDice(bufferedReader);
+        diceService.rollingDiceIO(bufferedReader);
     }
-
 
     public void endGame() {
         System.out.println("Game ended");

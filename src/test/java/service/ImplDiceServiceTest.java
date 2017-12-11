@@ -22,8 +22,8 @@ public class ImplDiceServiceTest {
 
     @Test
     public void rollShouldWorkCorrectlyWithNormalData() throws Exception {
-        List<Integer> rolls = diceService.roll(3);
-        Assert.assertEquals(3, rolls.size());
+        List<Integer> rolls = diceService.roll(100);
+        Assert.assertEquals(100, rolls.size());
         for (Integer roll : rolls) {
             Assert.assertTrue((roll >= 1) && (roll <= 6));
         }
@@ -56,6 +56,6 @@ public class ImplDiceServiceTest {
     @Test(expected = IOException.class)
     public void rollingDiceShouldThrowExceptionWithInvalidBufferedReader() throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader(INVALID_READER_PATH));
-        diceService.rollingDice(reader);
+        diceService.rollingDiceIO(reader);
     }
 }
