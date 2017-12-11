@@ -29,7 +29,12 @@ public class ImplDiceService implements DiceService {
         while (input == 'Y') {
             int counter = 1;
             System.out.println("How many dice would you like to roll: ");
-            int diceCount = Integer.parseInt(reader.readLine());
+            String diceCountInput = reader.readLine();
+            while (!isValidInteger(diceCountInput)) {
+                System.out.println("Invalid input. Please enter valid integer number!");
+                diceCountInput = reader.readLine();
+            }
+            int diceCount = Integer.parseInt(diceCountInput);
             List<Integer> diceRolls = roll(diceCount);
             for (Integer diceRoll : diceRolls) {
                 System.out.println(String.format("%d roll: %d", counter, diceRoll));
@@ -43,5 +48,14 @@ public class ImplDiceService implements DiceService {
                 input = reader.readLine().trim().toUpperCase().charAt(0);
             }
         }
+    }
+
+    private boolean isValidInteger(String str) {
+        try {
+            Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }
