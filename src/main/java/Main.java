@@ -3,16 +3,12 @@ import service.GameService;
 import service.ImplDiceService;
 import service.ImplGameService;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         DiceService diceService = new ImplDiceService();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        GameService game = new ImplGameService(diceService, reader);
-        game.startGame();
-        game.endGame();
+        GameService game = new ImplGameService(diceService);
+        game.play();
     }
 }

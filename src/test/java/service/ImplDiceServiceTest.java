@@ -4,15 +4,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ImplDiceServiceTest {
-    private final static String INVALID_READER_PATH = "resources/file.txt";
     private DiceService diceService;
 
     @Before
@@ -29,8 +23,9 @@ public class ImplDiceServiceTest {
         }
     }
 
-    @Test
-    public void rollShouldDoNothingWithNegativeData() {
+
+    @Test(expected = IllegalArgumentException.class)
+    public void rollShouldThrowException() {
         List<Integer> rolls = diceService.roll(-1);
         Assert.assertEquals(0, rolls.size());
     }
@@ -41,21 +36,9 @@ public class ImplDiceServiceTest {
     }
 
     @Test
-    public void getResultSumShouldWorkCorrectly() throws Exception {
-        List<Integer> list = new ArrayList<Integer>(Arrays.asList(1, 2, 3));
-        int sum = diceService.getResultSum(list);
-        Assert.assertEquals(6, sum);
-        list = new ArrayList<Integer>();
-        sum = diceService.getResultSum(list);
-        Assert.assertEquals(0, sum);
-        list = new ArrayList<Integer>(Arrays.asList(-1, -2, -3));
-        sum = diceService.getResultSum(list);
-        Assert.assertEquals(-6, sum);
-    }
-
-    @Test(expected = IOException.class)
-    public void rollingDiceShouldThrowExceptionWithInvalidBufferedReader() throws Exception {
-        BufferedReader reader = new BufferedReader(new FileReader(INVALID_READER_PATH));
-        diceService.rollingDiceIO(reader);
+    public void rollNoArgumentsShouldWorkCorrectly() {
+        List<Integer> rolls = diceService.roll();
+        Assert.assertEquals(1 , rolls.size());
+        Assert.assertTrue(rolls.get(0) >= 1 && rolls.get(0) <= 6);
     }
 }
