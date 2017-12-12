@@ -21,21 +21,20 @@ public class GameServiceImpl implements GameService {
 
     private void startGame() throws IOException {
         System.out.println("Game started");
-        rollingDiceIO(bufferedReader);
+        rollingDiceIO();
     }
 
-    private void rollingDiceIO(BufferedReader reader) throws IOException {
+    private void rollingDiceIO() throws IOException {
         char input;
         do {
             int counter = 1;
             List<Integer> diceRolls = diceService.roll(2);
             for (Integer diceRoll : diceRolls) {
-                System.out.println(String.format("%d roll: %d", counter, diceRoll));
-                counter++;
+                System.out.println(String.format("%d roll: %d", counter++, diceRoll));
             }
             System.out.println(String.format("Your total roll is: %d", getResultSum(diceRolls)));
             System.out.println("Would you like to roll again?{Y\\N}: ");
-            input = reader.readLine().trim().toUpperCase().charAt(0);
+            input = bufferedReader.readLine().trim().toUpperCase().charAt(0);
         }
         while (input == 'Y');
     }

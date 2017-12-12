@@ -5,7 +5,7 @@ import java.io.IOException;
 public interface GameService {
 
     /**
-     * starts the game
+     * method that starts Generala game
      *
      * @throws IOException from working with BufferedReader
      */

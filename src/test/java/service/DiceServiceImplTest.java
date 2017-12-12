@@ -25,20 +25,19 @@ public class DiceServiceImplTest {
 
 
     @Test(expected = IllegalArgumentException.class)
-    public void rollShouldThrowException() {
+    public void rollShouldThrowExceptionWithNegativeNumber() {
         List<Integer> rolls = diceService.roll(-1);
-        Assert.assertEquals(0, rolls.size());
     }
 
-    @Test(expected = OutOfMemoryError.class)
-    public void rollShouldThrowErrorWithMaxValue() {
+    @Test(expected = IllegalArgumentException.class)
+    public void rollShouldThrowExceptionWithMaxValue() {
         List<Integer> rolls = diceService.roll(Integer.MAX_VALUE);
     }
 
     @Test
     public void rollNoArgumentsShouldWorkCorrectly() {
         List<Integer> rolls = diceService.roll();
-        Assert.assertEquals(1, rolls.size());
+        Assert.assertEquals(1 , rolls.size());
         Assert.assertTrue(rolls.get(0) >= 1 && rolls.get(0) <= 6);
     }
 }

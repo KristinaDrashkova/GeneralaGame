@@ -5,6 +5,10 @@ import java.util.List;
 
 public class DiceServiceImpl implements DiceService {
     public List<Integer> roll(int diceCount) {
+        if (diceCount < 0 || diceCount > 100) {
+            //this will never happen
+            throw new IllegalArgumentException();
+        }
         List<Integer> diceValues = new ArrayList<Integer>(diceCount);
         for (int i = 0; i < diceCount; i++) {
             int dieValue = (int) (Math.random() * 6) + 1;
