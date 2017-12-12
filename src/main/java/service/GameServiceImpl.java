@@ -71,7 +71,7 @@ public class GameServiceImpl implements GameService {
         System.out.println("Best 3 players: ");
         int size = game.getPlayers().size() <= 3 ? game.getPlayers().size() : 3;
         for (int i = 0; i < size; i++) {
-            System.out.println(String.format("Player No %d: %s scored -> %d"
+            System.out.println(String.format("Player No %d [%s] scored: %d"
                     , i + 1 , game.getPlayers().get(i).getName(), game.getPlayers().get(i).getResult()));
         }
     }
