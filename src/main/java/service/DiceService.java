@@ -6,7 +6,7 @@ public interface DiceService {
 
 
     /**
-     * @return calls roll()
+     * @return calls roll() with param 1
      */
     List<Integer> roll();
 
