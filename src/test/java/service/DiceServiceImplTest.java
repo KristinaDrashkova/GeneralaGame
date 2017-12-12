@@ -38,7 +38,7 @@ public class DiceServiceImplTest {
     @Test
     public void rollNoArgumentsShouldWorkCorrectly() {
         List<Integer> rolls = diceService.roll();
-        Assert.assertEquals(1 , rolls.size());
+        Assert.assertEquals(1, rolls.size());
         Assert.assertTrue(rolls.get(0) >= 1 && rolls.get(0) <= 6);
     }
 }
