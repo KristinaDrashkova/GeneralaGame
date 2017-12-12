@@ -31,17 +31,23 @@ public class GameServiceImpl implements GameService {
         do {
             input = bufferedReader.readLine();
         } while (!isValidNumber(input, 10));
+
         int numberOfPlayers = Integer.parseInt(input);
+
         System.out.println("Enter number of rounds: ");
         do {
             input = bufferedReader.readLine();
         } while (!isValidNumber(input, 100));
+
         int numberOfRounds = Integer.parseInt(input);
+
         System.out.println("Enter number of dice: ");
         do {
             input = bufferedReader.readLine();
         } while (!isValidNumber(input, 100));
+
         int numberOfDice = Integer.parseInt(input);
+
         List<Player> players = new ArrayList<>(numberOfPlayers);
         System.out.println(String.format("Enter %s names: ", numberOfPlayers));
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -52,6 +58,7 @@ public class GameServiceImpl implements GameService {
             Player player = new Player(name);
             players.add(player);
         }
+
         return new Game(numberOfRounds, numberOfDice, players);
     }
 
@@ -68,11 +75,11 @@ public class GameServiceImpl implements GameService {
             }
         }
         Collections.sort(game.getPlayers());
-        System.out.println("Best 3 players: ");
+        System.out.println("Best three players: ");
         int size = game.getPlayers().size() <= 3 ? game.getPlayers().size() : 3;
         for (int i = 0; i < size; i++) {
             System.out.println(String.format("Player No %d [%s] scored: %d"
-                    , i + 1 , game.getPlayers().get(i).getName(), game.getPlayers().get(i).getResult()));
+                    , i + 1, game.getPlayers().get(i).getName(), game.getPlayers().get(i).getResult()));
         }
     }
 

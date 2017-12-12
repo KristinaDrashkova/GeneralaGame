@@ -7,7 +7,7 @@ public class Game {
     private int numberOfDice;
     private List<Player> players;
 
-    public Game(int rounds,int numberOfDice, List<Player> players) {
+    public Game(int rounds, int numberOfDice, List<Player> players) {
         this.rounds = rounds;
         this.numberOfDice = numberOfDice;
         this.players = players;

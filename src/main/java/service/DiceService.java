@@ -12,6 +12,7 @@ public interface DiceService {
 
     /**
      * Simulates throwing number of dice
+     *
      * @param diceCount count of dice to roll
      * @return collection of dice values between 1 and 6 (including)
      */
