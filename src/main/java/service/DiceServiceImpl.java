@@ -9,7 +9,7 @@ public class DiceServiceImpl implements DiceService {
             //this will never happen
             throw new IllegalArgumentException();
         }
-        List<Integer> diceValues = new ArrayList<Integer>(diceCount);
+        List<Integer> diceValues = new ArrayList<>(diceCount);
         for (int i = 0; i < diceCount; i++) {
             int dieValue = (int) (Math.random() * 6) + 1;
             diceValues.add(dieValue);

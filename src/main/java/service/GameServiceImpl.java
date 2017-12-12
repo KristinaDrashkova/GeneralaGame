@@ -64,9 +64,7 @@ public class GameServiceImpl implements GameService {
         Game game = initialize();
         for (int i = 0; i < game.getRounds(); i++) {
             for (Player player : game.getPlayers()) {
-                int previousResult = player.getResult();
-                int currentResult = getResultSum(diceService.roll(game.getNumberOfDice()));
-                player.setResult(previousResult + currentResult);
+                addResultToPlayer(player, game);
             }
         }
         Collections.sort(game.getPlayers());
@@ -76,6 +74,12 @@ public class GameServiceImpl implements GameService {
             System.out.println(String.format("Player No %d: %s scored -> %d"
                     , i + 1 , game.getPlayers().get(i).getName(), game.getPlayers().get(i).getResult()));
         }
+    }
+
+    private void addResultToPlayer(Player player, Game game) {
+        int previousResult = player.getResult();
+        int currentResult = getResultSum(diceService.roll(game.getNumberOfDice()));
+        player.setResult(previousResult + currentResult);
     }
 
     private int getResultSum(List<Integer> diceRolls) {

@@ -13,5 +13,12 @@ public interface GameService {
      */
     void play() throws IOException;
 
+
+    /**
+     * method that receives and distributes the input information for the game
+     *
+     * @return valid instance of a game
+     * @throws IOException from working with BufferedReader
+     */
     Game initialize() throws IOException;
 }
