@@ -16,10 +16,10 @@ public class GameServiceImplTest {
     public void playShouldWorkCorrectly() throws Exception {
         DiceService mockedDiceService = spy(new DiceServiceImpl());
         BufferedReader mockedReader = Mockito.mock(BufferedReader.class);
-        Mockito.when(mockedReader.readLine()).thenReturn("Y").thenReturn("g");
+        Mockito.when(mockedReader.readLine()).thenReturn("2").thenReturn("2").thenReturn("3").thenReturn("B").thenReturn("Z");
         GameService gameService = new GameServiceImpl(mockedDiceService);
         Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
-        verify(mockedDiceService, times(2)).roll(2);
+        verify(mockedDiceService, times(4)).roll(3);
     }
 }
