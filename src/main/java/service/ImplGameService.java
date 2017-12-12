@@ -8,9 +8,11 @@ import java.util.List;
 
 public class ImplGameService implements GameService {
     private DiceService diceService;
+    private BufferedReader bufferedReader;
 
     public ImplGameService(DiceService diceService) {
         this.diceService = diceService;
+        this.bufferedReader = getReader();
     }
 
     public void play() throws IOException {
@@ -19,12 +21,12 @@ public class ImplGameService implements GameService {
 
     private void startGame() throws IOException {
         System.out.println("Game started");
-        rollingDiceIO(getReader());
+        rollingDiceIO(bufferedReader);
     }
 
     private void rollingDiceIO(BufferedReader reader) throws IOException {
-        char input = 'Y';
-        while (input == 'Y') {
+        char input;
+        do {
             int counter = 1;
             List<Integer> diceRolls = diceService.roll(2);
             for (Integer diceRoll : diceRolls) {
@@ -32,14 +34,10 @@ public class ImplGameService implements GameService {
                 counter++;
             }
             System.out.println(String.format("Your total roll is: %d", getResultSum(diceRolls)));
-//            System.out.println("Would you like to roll again?{Y\\N}: ");
-//            input = reader.readLine().trim().toUpperCase().charAt(0);
-//            while (input != 'Y' && input != 'N') {
-//                System.out.println("Invalid input. Please enter Y or N!");
-//                input = reader.readLine().trim().toUpperCase().charAt(0);
-//            }
-            input = 'N';
+            System.out.println("Would you like to roll again?{Y\\N}: ");
+            input = reader.readLine().trim().toUpperCase().charAt(0);
         }
+        while (input == 'Y');
     }
 
     private int getResultSum(List<Integer> diceRolls) {

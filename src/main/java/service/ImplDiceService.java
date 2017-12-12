@@ -6,7 +6,7 @@ import java.util.List;
 public class ImplDiceService implements DiceService {
     public List<Integer> roll(int diceCount) {
         List<Integer> diceValues = new ArrayList<Integer>(diceCount);
-        while (diceCount-- > 0) {
+        for (int i = 0; i < diceCount; i++) {
             int dieValue = (int) (Math.random() * 6) + 1;
             diceValues.add(dieValue);
         }
