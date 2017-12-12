@@ -6,12 +6,12 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class ImplDiceServiceTest {
+public class DiceServiceImplTest {
     private DiceService diceService;
 
     @Before
     public void initialize() {
-        diceService = new ImplDiceService();
+        diceService = new DiceServiceImpl();
     }
 
     @Test

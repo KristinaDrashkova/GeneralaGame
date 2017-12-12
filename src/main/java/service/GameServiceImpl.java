@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class ImplGameService implements GameService {
+public class GameServiceImpl implements GameService {
     private DiceService diceService;
     private BufferedReader bufferedReader;
 
-    public ImplGameService(DiceService diceService) {
+    public GameServiceImpl(DiceService diceService) {
         this.diceService = diceService;
         this.bufferedReader = getReader();
     }

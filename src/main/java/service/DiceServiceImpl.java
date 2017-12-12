@@ -3,7 +3,7 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImplDiceService implements DiceService {
+public class DiceServiceImpl implements DiceService {
     public List<Integer> roll(int diceCount) {
         List<Integer> diceValues = new ArrayList<Integer>(diceCount);
         for (int i = 0; i < diceCount; i++) {
