@@ -13,7 +13,7 @@ public interface DiceService {
     /**
      * Simulates throwing number of dice
      *
-     * @param diceCount count of dice to roll
+     * @param diceCount count of dice to roll, must be between 1 and 100 including
      * @return collection of dice values between 1 and 6 (including)
      */
     List<Integer> roll(int diceCount);

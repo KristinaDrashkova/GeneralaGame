@@ -2,6 +2,7 @@ package service;
 
 import entities.Game;
 import entities.Player;
+import exceptions.ConsoleInputException;
 
 import java.io.BufferedReader;
 
@@ -21,40 +22,40 @@ public class GameServiceImpl implements GameService {
         this.bufferedReader = getReader();
     }
 
-    public void play() throws IOException {
+    public void play() throws ConsoleInputException {
         game = initialize();
         for (int i = 0; i < game.getRounds(); i++) {
             for (Player player : game.getPlayers()) {
-                int result = getResultSum(diceService.roll(game.getNumberOfDice()));
-                addResultToPlayer(player, result);
+                int diceSum = getDiceSum(diceService.roll(game.getNumberOfDice()));
+                updatePlayerScore(player, diceSum);
             }
         }
         Collections.sort(game.getPlayers());
         System.out.println("Best players: ");
-        int size = game.getPlayers().size() <= 3 ? game.getPlayers().size() : 3;
-        for (int i = 0; i < size; i++) {
+        int winnersCount = game.getPlayers().size() <= 3 ? game.getPlayers().size() : 3;
+        for (int playerIdx = 0; playerIdx < winnersCount; playerIdx++) {
             System.out.println(String.format("Player No %d [%s] scored: %d"
-                    , i + 1, game.getPlayers().get(i).getName(), game.getPlayers().get(i).getResult()));
+                    , playerIdx + 1, game.getPlayers().get(playerIdx).getName(), game.getPlayers().get(playerIdx).getResult()));
         }
     }
 
-    private Game initialize() throws IOException {
+    private Game initialize() throws ConsoleInputException {
         game = new Game();
         System.out.println("Enter number of players: ");
-        int numberOfPlayers = getValidNumber(10);
+        int numberOfPlayers = getValidNumber(PLAYERS_MAX_COUNT);
 
         System.out.println("Enter number of rounds: ");
-        int numberOfRounds = getValidNumber(100);
+        int numberOfRounds = getValidNumber(ROUNDS_MAX_COUNT);
 
         System.out.println("Enter number of dice: ");
-        int numberOfDice = getValidNumber(100);
+        int numberOfDice = getValidNumber(DICE_MAX_COUNT);
 
         System.out.println(String.format("Enter %s names: ", numberOfPlayers));
         for (int i = 0; i < numberOfPlayers; i++) {
-            String name = bufferedReader.readLine();
+            String name = readFromConsole();
             while (!isUniqueName(name, game)) {
                 System.out.println("This name already exists, please enter different name");
-                name = bufferedReader.readLine();
+                name = readFromConsole();
             }
             Player player = new Player(name);
             game.addPlayer(player);
@@ -64,13 +65,13 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
-    private void addResultToPlayer(Player player, int result) {
+    private void updatePlayerScore(Player player, int result) {
         int currentResult = player.getResult();
         int newResult = currentResult + result;
         player.setResult(newResult);
     }
 
-    private int getResultSum(List<Integer> diceRolls) {
+    private int getDiceSum(List<Integer> diceRolls) {
         int sum = 0;
         for (Integer diceRoll : diceRolls) {
             sum += diceRoll;
@@ -82,11 +83,11 @@ public class GameServiceImpl implements GameService {
         return new BufferedReader(new InputStreamReader(System.in));
     }
 
-    private int getValidNumber(int maxValue) throws IOException {
-        String input = bufferedReader.readLine();
+    private int getValidNumber(int maxValue) throws ConsoleInputException {
+        String input = readFromConsole();
         while (!isValidNumber(input, maxValue)) {
-            System.out.println("Please enter valid number");
-            input = bufferedReader.readLine();
+            System.out.println(String.format("Please enter valid number between 1 and %d including", maxValue));
+            input = readFromConsole();
         }
 
         return Integer.parseInt(input);
@@ -106,5 +107,13 @@ public class GameServiceImpl implements GameService {
 
     private boolean isUniqueName(String name, Game game) {
         return game.getPlayers().stream().filter(p -> p.getName().equals(name)).collect(Collectors.toList()).size() <= 0;
+    }
+
+    private String readFromConsole() throws ConsoleInputException {
+        try {
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new ConsoleInputException("There is a problem reading from the console");
+        }
     }
 }

@@ -22,11 +22,9 @@ public class GameServiceImplTest {
                 .thenReturn(Arrays.asList(2, 3, 4)).thenReturn(Arrays.asList(1, 2, 3))
                 .thenReturn(Arrays.asList(2, 3, 4)).thenReturn(Arrays.asList(1, 2, 3));
         GameService gameService = new GameServiceImpl(mockedDiceService);
-        Field gameField = GameServiceImpl.class.getDeclaredField("game");
-        gameField.setAccessible(true);
         Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
-        Game game = (Game) gameField.get(gameService);
+        Game game = (Game) Whitebox.getInternalState(gameService, "game");
         Assert.assertEquals(3, game.getNumberOfDice());
         Assert.assertEquals(2, game.getRounds());
         Assert.assertEquals("A", game.getPlayers().get(0).getName());
