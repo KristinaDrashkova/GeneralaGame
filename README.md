@@ -1,4 +1,5 @@
 # GeneralaGame
+(first part)
 Write a program that simulates rolling a pair of dice. You can simulate rolling one die
 by choosing one of the integers 1, 2, 3, 4, 5, or 6 at random. The number you pick
 represents the number on the die after it is rolled. The expression 

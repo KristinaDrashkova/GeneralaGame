@@ -1,25 +1,37 @@
 package service;
 
+import entities.Game;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.BufferedReader;
-
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class GameServiceImplTest {
 
     @Test
     public void playShouldWorkCorrectly() throws Exception {
-        DiceService mockedDiceService = spy(new DiceServiceImpl());
+        DiceService mockedDiceService = Mockito.mock(DiceServiceImpl.class);
         BufferedReader mockedReader = Mockito.mock(BufferedReader.class);
-        Mockito.when(mockedReader.readLine()).thenReturn("2").thenReturn("2").thenReturn("3").thenReturn("B").thenReturn("Z");
+        Mockito.when(mockedReader.readLine())
+                .thenReturn("2").thenReturn("2").thenReturn("3").thenReturn("A").thenReturn("B");
+        Mockito.when(mockedDiceService.roll(3))
+                .thenReturn(Arrays.asList(2, 3, 4)).thenReturn(Arrays.asList(1, 2, 3))
+                .thenReturn(Arrays.asList(2, 3, 4)).thenReturn(Arrays.asList(1, 2, 3));
         GameService gameService = new GameServiceImpl(mockedDiceService);
+        Field gameField = GameServiceImpl.class.getDeclaredField("game");
+        gameField.setAccessible(true);
         Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
-        verify(mockedDiceService, times(4)).roll(3);
+        Game game = (Game) gameField.get(gameService);
+        Assert.assertEquals(3, game.getNumberOfDice());
+        Assert.assertEquals(2, game.getRounds());
+        Assert.assertEquals("A", game.getPlayers().get(0).getName());
+        Assert.assertEquals(18, game.getPlayers().get(0).getResult());
+        Assert.assertEquals("B", game.getPlayers().get(1).getName());
+        Assert.assertEquals(12, game.getPlayers().get(1).getResult());
     }
 }

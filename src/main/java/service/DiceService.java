@@ -17,5 +17,4 @@ public interface DiceService {
      * @return collection of dice values between 1 and 6 (including)
      */
     List<Integer> roll(int diceCount);
-
 }

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class GameServiceImpl implements GameService {
     private DiceService diceService;
     private BufferedReader bufferedReader;
+    private Game game;
 
     public GameServiceImpl(DiceService diceService) {
         this.diceService = diceService;
@@ -21,7 +22,7 @@ public class GameServiceImpl implements GameService {
     }
 
     public void play() throws IOException {
-        Game game = initialize();
+        game = initialize();
         for (int i = 0; i < game.getRounds(); i++) {
             for (Player player : game.getPlayers()) {
                 int result = getResultSum(diceService.roll(game.getNumberOfDice()));
@@ -38,7 +39,7 @@ public class GameServiceImpl implements GameService {
     }
 
     private Game initialize() throws IOException {
-        Game game = new Game();
+        game = new Game();
         System.out.println("Enter number of players: ");
         int numberOfPlayers = getValidNumber(10);
 
