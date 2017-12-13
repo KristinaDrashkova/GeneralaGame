@@ -24,6 +24,10 @@ public class Player implements Comparable<Player> {
         this.result = result;
     }
 
+    /**
+     * @param player from the game
+     * @return the player with the higher score
+     */
     @Override
     public int compareTo(Player player) {
         return player.getResult() - result;

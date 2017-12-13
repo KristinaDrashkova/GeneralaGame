@@ -2,19 +2,17 @@ package service;
 
 import exceptions.ConsoleInputException;
 
-import java.io.IOException;
-
 public interface GameService {
     /**
-     * maximum count of rounds that the game may have
+     * maximum count of rounds in the game
      */
     int ROUNDS_MAX_COUNT = 100;
     /**
-     * maximum count of players that the game may have
+     * maximum count of players in the game
      */
     int PLAYERS_MAX_COUNT = 10;
     /**
-     * maximum count of dice that the game may have
+     * maximum count of dice in the game
      */
     int DICE_MAX_COUNT = 100;
 

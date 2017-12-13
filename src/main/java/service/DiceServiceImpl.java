@@ -6,7 +6,6 @@ import java.util.List;
 public class DiceServiceImpl implements DiceService {
     public List<Integer> roll(int diceCount) {
         if (diceCount < 0 || diceCount > 100) {
-            //this will never happen
             throw new IllegalArgumentException();
         }
         List<Integer> diceValues = new ArrayList<>(diceCount);

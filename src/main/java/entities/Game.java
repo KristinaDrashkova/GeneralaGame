@@ -6,11 +6,7 @@ import java.util.List;
 public class Game {
     private int rounds;
     private int numberOfDice;
-    private List<Player> players;
-
-    public Game() {
-        players = new ArrayList<>();
-    }
+    private List<Player> players = new ArrayList<>();
 
     public int getRounds() {
         return rounds;
