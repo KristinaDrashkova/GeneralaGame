@@ -9,6 +9,7 @@ import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameServiceImplTest {
@@ -18,33 +19,23 @@ public class GameServiceImplTest {
         DiceService mockedDiceService = Mockito.mock(DiceServiceImpl.class);
         BufferedReader mockedReader = Mockito.mock(BufferedReader.class);
         String numberOfPlayers = "2";
-        String numberOfRounds = "2";
-        String numberOfDice = "3";
         String firstPlayerName = "A";
         String secondPlayerName = "B";
         Mockito.when(mockedReader.readLine())
                 .thenReturn(numberOfPlayers)
-                .thenReturn(numberOfRounds)
-                .thenReturn(numberOfDice)
                 .thenReturn(firstPlayerName)
                 .thenReturn(secondPlayerName);
-        Mockito.when(mockedDiceService.roll(3))
-                .thenReturn(Arrays.asList(2, 3, 4))
-                .thenReturn(Arrays.asList(1, 2, 3))
-                .thenReturn(Arrays.asList(2, 3, 4))
-                .thenReturn(Arrays.asList(1, 2, 3));
+        Mockito.when(mockedDiceService.roll(5))
+                .thenReturn(Arrays.asList(2, 3, 4, 3, 4))
+                .thenReturn(Arrays.asList(1, 2, 3, 4, 5))
+                .thenReturn(Arrays.asList(2, 3, 4, 4, 4))
+                .thenReturn(Arrays.asList(1, 2, 3, 3, 2));
         GameService gameService = new GameServiceImpl(mockedDiceService);
         Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
-        Assert.assertEquals(Integer.parseInt(numberOfDice), game.getNumberOfDice());
-        Assert.assertEquals(Integer.parseInt(numberOfRounds), game.getRounds());
-//        Assert.assertEquals(firstPlayerName, game.getPlayers().get(0).getName());
-//        int expectedFirstPlayerScore = 18;
-//        Assert.assertEquals(expectedFirstPlayerScore, game.getPlayers().get(0).getResult());
-//        Assert.assertEquals(secondPlayerName, game.getPlayers().get(1).getName());
-//        int expectedSecondPlayerScore = 12;
-//        Assert.assertEquals(expectedSecondPlayerScore, game.getPlayers().get(1).getResult());
+        int expectedFirstPlayerScore = 77;
+        Assert.assertEquals(expectedFirstPlayerScore, (new ArrayList<>(game.getPlayers().keySet())).get(0).getResult());
     }
 
     @Test
@@ -53,40 +44,26 @@ public class GameServiceImplTest {
         BufferedReader mockedReader = Mockito.mock(BufferedReader.class);
         String wrongNumberOfPlayers = "-2";
         String numberOfPlayers = "2";
-        String wrongNumberOfRounds = "101";
-        String numberOfRounds = "2";
-        String wrongNumberOfDice = "0";
-        String numberOfDice = "3";
         String firstPlayerName = "A";
         String repeatName = "A";
         String secondPlayerName = "B";
         Mockito.when(mockedReader.readLine())
                 .thenReturn(wrongNumberOfPlayers)
                 .thenReturn(numberOfPlayers)
-                .thenReturn(wrongNumberOfRounds)
-                .thenReturn(numberOfRounds)
-                .thenReturn(wrongNumberOfDice)
-                .thenReturn(numberOfDice)
                 .thenReturn(firstPlayerName)
                 .thenReturn(repeatName)
                 .thenReturn(secondPlayerName);
-        Mockito.when(mockedDiceService.roll(3))
-                .thenReturn(Arrays.asList(2, 3, 4))
-                .thenReturn(Arrays.asList(1, 2, 3))
-                .thenReturn(Arrays.asList(2, 3, 4))
-                .thenReturn(Arrays.asList(1, 2, 3));
+        Mockito.when(mockedDiceService.roll(5))
+                .thenReturn(Arrays.asList(2, 3, 4, 3, 4))
+                .thenReturn(Arrays.asList(1, 2, 3, 4, 5))
+                .thenReturn(Arrays.asList(2, 3, 4, 4, 4))
+                .thenReturn(Arrays.asList(1, 2, 3, 3, 2));
         GameService gameService = new GameServiceImpl(mockedDiceService);
         Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
-        Assert.assertEquals(Integer.parseInt(numberOfDice), game.getNumberOfDice());
-        Assert.assertEquals(Integer.parseInt(numberOfRounds), game.getRounds());
-//        Assert.assertEquals(firstPlayerName, game.getPlayers().get(0).getName());
-//        int expectedFirstPlayerScore = 18;
-//        Assert.assertEquals(expectedFirstPlayerScore, game.getPlayers().get(0).getResult());
-//        Assert.assertEquals(secondPlayerName, game.getPlayers().get(1).getName());
-//        int expectedSecondPlayerScore = 12;
-//        Assert.assertEquals(expectedSecondPlayerScore, game.getPlayers().get(1).getResult());
+        int expectedFirstPlayerScore = 77;
+        Assert.assertEquals(expectedFirstPlayerScore, (new ArrayList<>(game.getPlayers().keySet())).get(0).getResult());
     }
 
     @SuppressWarnings("unchecked")

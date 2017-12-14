@@ -134,13 +134,13 @@ public enum Combination {
                 for (int i = 0; i < dice.size(); i++) {
                     for (int j = i + 1; j < dice.size(); j++) {
                         if (dice.get(i) == dice.get(j)) {
-                            if (maxPair < dice.get(i) * 2) {
+                            if (maxPair < this.constant + dice.get(i) * 2) {
                                 maxPair = this.constant + dice.get(i) * 2;
                             }
                         }
                     }
                 }
-                result += maxPair;
+                result = maxPair;
             }
             break;
         }
