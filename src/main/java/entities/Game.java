@@ -1,12 +1,13 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import service.Combination;
+
+import java.util.*;
 
 public class Game {
     private int rounds;
     private int numberOfDice;
-    private List<Player> players = new ArrayList<>();
+    private Map<Player, List<Combination>> players = new HashMap<>();
 
     public int getRounds() {
         return rounds;
@@ -24,15 +25,16 @@ public class Game {
         this.numberOfDice = numberOfDice;
     }
 
-    public List<Player> getPlayers() {
+    public Map<Player, List<Combination>> getPlayers() {
         return players;
     }
 
-    private void setPlayers(List<Player> players) {
+    public void setPlayers(Map<Player, List<Combination>> players) {
         this.players = players;
     }
 
     public void addPlayer(Player player) {
-        this.players.add(player);
+        List<Combination> combinations = new ArrayList<>(EnumSet.allOf(Combination.class));
+        this.players.put(player, combinations);
     }
 }

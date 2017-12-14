@@ -8,11 +8,12 @@ import java.io.BufferedReader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GameServiceImpl implements GameService {
+    private static final int NUMBER_OF_DICE = 5;
     private DiceService diceService;
     private BufferedReader bufferedReader;
     private Game game;
@@ -24,32 +25,41 @@ public class GameServiceImpl implements GameService {
 
     public void play() throws ConsoleInputException {
         game = initialize();
+        Player winner = null;
         for (int i = 0; i < game.getRounds(); i++) {
-            for (Player player : game.getPlayers()) {
-                int diceSum = getDiceSum(diceService.roll(game.getNumberOfDice()));
-                updatePlayerScore(player, diceSum);
+            if (winner == null) {
+                for (Player player : game.getPlayers().keySet()) {
+                    List<Integer> dice = diceService.roll(5);
+                    int maxCombinationResult = 0;
+                    Combination combinationThrown = null;
+                    for (Combination combination : game.getPlayers().get(player)) {
+                        int combinationResult = combination.calculate(dice);
+                        if (combinationResult > maxCombinationResult) {
+                            maxCombinationResult = combinationResult;
+                            combinationThrown = combination;
+                        }
+                    }
+                    if (maxCombinationResult != 0) {
+                        if (combinationThrown.equals(Combination.GENERALA)) {
+                            winner = player;
+                            break;
+                        }
+                        updatePlayerScore(player, maxCombinationResult, combinationThrown);
+                    }
+                }
             }
         }
-        Collections.sort(game.getPlayers());
-        System.out.println("Best players: ");
-        int winnersCount = game.getPlayers().size() <= 3 ? game.getPlayers().size() : 3;
-        for (int playerIdx = 0; playerIdx < winnersCount; playerIdx++) {
-            System.out.println(String.format("Player No %d [%s] scored: %d"
-                    , playerIdx + 1, game.getPlayers().get(playerIdx).getName(), game.getPlayers().get(playerIdx).getResult()));
+        Collections.sort(new ArrayList<>(game.getPlayers().keySet()));
+        if (winner == null) {
+            winner = (new ArrayList<>(game.getPlayers().keySet())).get(0);
         }
+        System.out.println("The winner is: " + winner.getName() + " with score: " + winner.getResult());
     }
 
     private Game initialize() throws ConsoleInputException {
         game = new Game();
         System.out.println("Enter number of players: ");
         int numberOfPlayers = getValidNumber(PLAYERS_MAX_COUNT);
-
-        System.out.println("Enter number of rounds: ");
-        int numberOfRounds = getValidNumber(ROUNDS_MAX_COUNT);
-
-        System.out.println("Enter number of dice: ");
-        int numberOfDice = getValidNumber(DICE_MAX_COUNT);
-
         System.out.println(String.format("Enter %s names: ", numberOfPlayers));
         for (int i = 0; i < numberOfPlayers; i++) {
             String name = readFromConsole();
@@ -60,24 +70,18 @@ public class GameServiceImpl implements GameService {
             Player player = new Player(name);
             game.addPlayer(player);
         }
-        game.setNumberOfDice(numberOfDice);
-        game.setRounds(numberOfRounds);
+        game.setNumberOfDice(NUMBER_OF_DICE);
+        game.setRounds(Combination.values().length);
         return game;
     }
 
-    private void updatePlayerScore(Player player, int result) {
+    private void updatePlayerScore(Player player, int result, Combination combination) {
         int currentResult = player.getResult();
         int newResult = currentResult + result;
         player.setResult(newResult);
+        game.getPlayers().get(player).remove(combination);
     }
 
-    private int getDiceSum(List<Integer> diceRolls) {
-        int sum = 0;
-        for (Integer diceRoll : diceRolls) {
-            sum += diceRoll;
-        }
-        return sum;
-    }
 
     private BufferedReader getReader() {
         return new BufferedReader(new InputStreamReader(System.in));
@@ -106,7 +110,12 @@ public class GameServiceImpl implements GameService {
     }
 
     private boolean isUniqueName(String name, Game game) {
-        return game.getPlayers().stream().filter(p -> p.getName().equals(name)).collect(Collectors.toList()).size() <= 0;
+        for (Player player : game.getPlayers().keySet()) {
+            if (player.getName().equals(name)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private String readFromConsole() throws ConsoleInputException {
