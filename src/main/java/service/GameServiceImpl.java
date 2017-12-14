@@ -30,6 +30,7 @@ public class GameServiceImpl implements GameService {
             if (winner == null) {
                 for (Player player : game.getPlayers().keySet()) {
                     List<Integer> dice = diceService.roll(5);
+                    System.out.println(String.format("Player %s has thrown %s", player.getName(), dice));
                     int maxCombinationResult = 0;
                     Combination combinationThrown = null;
                     for (Combination combination : game.getPlayers().get(player)) {
@@ -42,11 +43,11 @@ public class GameServiceImpl implements GameService {
                     if (maxCombinationResult != 0) {
                         if (combinationThrown.equals(Combination.GENERALA)) {
                             winner = player;
+                            updatePlayerScore(player, maxCombinationResult, combinationThrown);
                             break;
                         }
-                        System.out.println(String.format(
-                                "Player %s has thrown %s and chose %s combination and added %d points to his/her score"
-                                , player.getName(), dice, combinationThrown.toString(), maxCombinationResult));
+                        System.out.println(String.format("%s chose %s combination and added %d points to his/her score"
+                                , player.getName(), combinationThrown.toString(), maxCombinationResult));
                         updatePlayerScore(player, maxCombinationResult, combinationThrown);
                     }
                 }
@@ -56,7 +57,7 @@ public class GameServiceImpl implements GameService {
         if (winner == null) {
             winner = (new ArrayList<>(game.getPlayers().keySet())).get(0);
         }
-        System.out.println("The winner is: " + winner.getName() + " with score: " + winner.getResult());
+        System.out.println(String.format("The winner is: %s with score: %d", winner.getName(), winner.getResult()));
     }
 
     private Game initialize() throws ConsoleInputException {
