@@ -44,6 +44,9 @@ public class GameServiceImpl implements GameService {
                             winner = player;
                             break;
                         }
+                        System.out.println(String.format(
+                                "Player %s has thrown %s and chose %s combination and added %d points to his/her score"
+                                , player.getName(), dice, combinationThrown.toString(), maxCombinationResult));
                         updatePlayerScore(player, maxCombinationResult, combinationThrown);
                     }
                 }
