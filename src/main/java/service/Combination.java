@@ -165,7 +165,7 @@ public enum Combination {
         int maxPairKey = 0;
         for (Integer key : diceOccurrences.keySet()) {
             int value = diceOccurrences.get(key);
-            if (value == 4 || value== 3 || value == 2) {
+            if (value == 4 || value == 3 || value == 2) {
                 if (maxPairKey < key) {
                     maxPairKey = key;
                 }

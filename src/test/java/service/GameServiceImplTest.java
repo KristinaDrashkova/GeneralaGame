@@ -35,7 +35,7 @@ public class GameServiceImplTest {
         Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
-        int expectedFirstPlayerScore = 74;
+        int expectedFirstPlayerScore = 92;
         Player winner = new ArrayList<>(game.getPlayers().keySet()).get(0);
         Assert.assertEquals(expectedFirstPlayerScore, winner.getResult());
     }
