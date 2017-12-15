@@ -1,6 +1,7 @@
 package service;
 
 import entities.Game;
+import entities.Player;
 import exceptions.ConsoleInputException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,16 +27,17 @@ public class GameServiceImplTest {
                 .thenReturn(firstPlayerName)
                 .thenReturn(secondPlayerName);
         Mockito.when(mockedDiceService.roll(5))
-                .thenReturn(Arrays.asList(2, 3, 4, 3, 4))
-                .thenReturn(Arrays.asList(1, 2, 3, 4, 5))
-                .thenReturn(Arrays.asList(2, 3, 4, 4, 4))
-                .thenReturn(Arrays.asList(1, 2, 3, 3, 2));
+                .thenReturn(Arrays.asList(2, 2, 3, 4, 5))
+                .thenReturn(Arrays.asList(3, 3, 4, 3, 4))
+                .thenReturn(Arrays.asList(1, 2, 3, 3, 2))
+                .thenReturn(Arrays.asList(2, 3, 4, 4, 4));
         GameService gameService = new GameServiceImpl(mockedDiceService);
         Whitebox.setInternalState(gameService, "bufferedReader" , mockedReader);
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
-        int expectedFirstPlayerScore = 77;
-        Assert.assertEquals(expectedFirstPlayerScore, (new ArrayList<>(game.getPlayers().keySet())).get(0).getResult());
+        int expectedFirstPlayerScore = 74;
+        Player winner = new ArrayList<>(game.getPlayers().keySet()).get(0);
+        Assert.assertEquals(expectedFirstPlayerScore, winner.getResult());
     }
 
     @Test
@@ -62,8 +64,9 @@ public class GameServiceImplTest {
         Whitebox.setInternalState(gameService, "bufferedReader" , mockedReader);
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
-        int expectedFirstPlayerScore = 77;
-        Assert.assertEquals(expectedFirstPlayerScore, (new ArrayList<>(game.getPlayers().keySet())).get(0).getResult());
+        int expectedFirstPlayerScore = 86;
+        Player winner = new ArrayList<>(game.getPlayers().keySet()).get(0);
+        Assert.assertEquals(expectedFirstPlayerScore, winner.getResult());
     }
 
     @Test
@@ -88,7 +91,8 @@ public class GameServiceImplTest {
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
         int expectedFirstPlayerScore = 60;
-        Assert.assertEquals(expectedFirstPlayerScore, (new ArrayList<>(game.getPlayers().keySet())).get(0).getResult());
+        Player winner = new ArrayList<>(game.getPlayers().keySet()).get(0);
+        Assert.assertEquals(expectedFirstPlayerScore, winner.getResult());
     }
 
     @SuppressWarnings("unchecked")

@@ -1,7 +1,6 @@
 package service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public enum Combination {
     GENERALA(50),
@@ -19,130 +18,153 @@ public enum Combination {
     }
 
     public int calculate(List<Integer> dice) {
+        TreeMap<Integer, Integer> diceOccurrences = new TreeMap<>(Comparator.reverseOrder());
+        for (Integer die : dice) {
+            if (!diceOccurrences.containsKey(die)) {
+                diceOccurrences.put(die, 0);
+            }
+            int value = diceOccurrences.get(die) + 1;
+            diceOccurrences.put(die, value);
+        }
         int result = 0;
         switch (this) {
             case GENERALA: {
-                for (int i = 0; i < dice.size(); i++) {
-                    int count = 1;
-                    for (int j = i + 1; j < dice.size(); j++) {
-                        if (dice.get(i) == dice.get(j)) {
-                            count++;
-                            if (count == 5) {
-                                result = this.constant + 5 * dice.get(i);
-                                break;
-                            }
-                        }
-                    }
-                }
+                result = getResultFromGeneralaCombination(diceOccurrences);
             }
             break;
             case FOUR: {
-                for (int i = 0; i < dice.size(); i++) {
-                    int count = 1;
-                    for (int j = i + 1; j < dice.size(); j++) {
-                        if (dice.get(i) == dice.get(j)) {
-                            count++;
-                            if (count == 4) {
-                                result = this.constant + 4 * dice.get(i);
-                                break;
-                            }
-                        }
-                    }
-                }
+                result = getResultFromFourCombination(diceOccurrences);
             }
             break;
             case STRAIGHT: {
-                int count = 1;
-                int minValue = Collections.min(dice);
-                for (int i = 0; i < 5; i++) {
-                    if (dice.contains(minValue + 1)) {
-                        minValue++;
-                        count++;
-                        if (count == 5) {
-                            result = this.constant + 5 * minValue - 10;
-                            break;
-                        }
-                    }
-                }
+                result = getResultFromStraightCombination(diceOccurrences);
             }
             break;
             case FULL_HOUSE: {
-                int firstValue = 0;
-                boolean hasTriple = false;
-                for (int i = 0; i < dice.size(); i++) {
-                    int count = 1;
-                    for (int j = i + 1; j < dice.size(); j++) {
-                        if (dice.get(i) == dice.get(j)) {
-                            count++;
-                            if (count == 3) {
-                                hasTriple = true;
-                                firstValue = dice.get(i);
-                            }
-                        }
-                    }
-                }
-                if (hasTriple) {
-                    for (int i = 0; i < dice.size(); i++) {
-                        for (int j = i + 1; j < dice.size(); j++) {
-                            if (firstValue != dice.get(i) && dice.get(i) == dice.get(j)) {
-                                result = this.constant + 3 * firstValue + 2 * dice.get(i);
-                            }
-                        }
-                    }
-                }
+                result = getResultFromFullHouseCombination(diceOccurrences);
             }
             break;
             case TRIPLE: {
-                for (int i = 0; i < dice.size(); i++) {
-                    int count = 1;
-                    for (int j = i + 1; j < dice.size(); j++) {
-                        if (dice.get(i) == dice.get(j)) {
-                            count++;
-                            if (count == 3) {
-                                result = this.constant + 3 * dice.get(i);
-                                break;
-                            }
-                        }
-                    }
-                }
+                result = getResultFromTripleCombination(diceOccurrences);
             }
             break;
             case DOUBLE_PAIR: {
-                int firstValue = 0;
-                boolean hasPair = false;
-                for (int i = 0; i < dice.size(); i++) {
-                    for (int j = i + 1; j < dice.size(); j++) {
-                        if (dice.get(i) == dice.get(j)) {
-                            hasPair = true;
-                            firstValue = dice.get(i);
-                        }
-                    }
-                }
-                if (hasPair) {
-                    for (int i = 0; i < dice.size(); i++) {
-                        for (int j = i + 1; j < dice.size(); j++) {
-                            if (firstValue != dice.get(i) && dice.get(i) == dice.get(j)) {
-                                result = this.constant + 2 * firstValue + 2 * dice.get(i);
-                            }
-                        }
-                    }
-                }
+                result = getResultFromDoublePairCombination(diceOccurrences);
             }
             break;
             case PAIR: {
-                int maxPair = 0;
-                for (int i = 0; i < dice.size(); i++) {
-                    for (int j = i + 1; j < dice.size(); j++) {
-                        if (dice.get(i) == dice.get(j)) {
-                            if (maxPair < this.constant + dice.get(i) * 2) {
-                                maxPair = this.constant + dice.get(i) * 2;
-                            }
-                        }
-                    }
-                }
-                result = maxPair;
+                result = getResultFromPairCombination(diceOccurrences);
             }
             break;
+        }
+        return result != 0 ? result + constant : result;
+    }
+
+    private int getResultFromGeneralaCombination(TreeMap<Integer, Integer> diceOccurrences) {
+        int result = 0;
+        for (Integer key : diceOccurrences.keySet()) {
+            int value = diceOccurrences.get(key);
+            if (value == 5) {
+                result = 5 * key;
+            }
+        }
+        return result;
+    }
+
+    private int getResultFromFourCombination(TreeMap<Integer, Integer> diceOccurrences) {
+        int result = 0;
+        for (Integer key : diceOccurrences.keySet()) {
+            int value = diceOccurrences.get(key);
+            if (value == 4) {
+                result = 4 * key;
+            }
+        }
+        return result;
+    }
+
+    private int getResultFromStraightCombination(TreeMap<Integer, Integer> diceOccurrences) {
+        int result = 0;
+        if (diceOccurrences.size() >= 5) {
+            boolean hasStraight = true;
+            Object[] keyCompare = diceOccurrences.keySet().toArray();
+            for (int i = 0; i < keyCompare.length - 1; i++) {
+                int currentKey = (Integer) keyCompare[i];
+                int nextKey = (Integer) keyCompare[i + 1];
+                if (currentKey - 1 != nextKey) {
+                    hasStraight = false;
+                }
+            }
+            if (hasStraight) {
+                result = 5 * (Integer) keyCompare[0] - 10;
+            }
+        }
+
+        return result;
+    }
+
+    private int getResultFromFullHouseCombination(TreeMap<Integer, Integer> diceOccurrences) {
+        int result = 0;
+        int tripleKey = 0;
+        int pairKey = 0;
+        for (Integer key : diceOccurrences.keySet()) {
+            int value = diceOccurrences.get(key);
+            if (value == 3) {
+                tripleKey = key;
+            }
+            if (value == 2) {
+                pairKey = key;
+            }
+        }
+        if (tripleKey != 0 && pairKey != 0) {
+            result = tripleKey * 3 + pairKey * 2;
+        }
+        return result;
+    }
+
+    private int getResultFromTripleCombination(TreeMap<Integer, Integer> diceOccurrences) {
+        int result = 0;
+        for (Integer key : diceOccurrences.keySet()) {
+            int value = diceOccurrences.get(key);
+            if (value == 3) {
+                result = 3 * key;
+            }
+        }
+        return result;
+    }
+
+    private int getResultFromDoublePairCombination(TreeMap<Integer, Integer> diceOccurrences) {
+        int result = 0;
+        int firstPairKey = 0;
+        int secondPairKey = 0;
+        for (Integer key : diceOccurrences.keySet()) {
+            int value = diceOccurrences.get(key);
+            if (value == 2) {
+                if (firstPairKey == 0) {
+                    firstPairKey = key;
+                } else {
+                    secondPairKey = key;
+                }
+            }
+        }
+        if (firstPairKey != 0 && secondPairKey != 0) {
+            result = firstPairKey * 2 + secondPairKey * 2;
+        }
+        return result;
+    }
+
+    private int getResultFromPairCombination(TreeMap<Integer, Integer> diceOccurrences) {
+        int result = 0;
+        int maxPairKey = 0;
+        for (Integer key : diceOccurrences.keySet()) {
+            int value = diceOccurrences.get(key);
+            if (value == 2) {
+                if (maxPairKey < key) {
+                    maxPairKey = key;
+                }
+            }
+        }
+        if (maxPairKey != 0) {
+            result = 2 * maxPairKey;
         }
         return result;
     }

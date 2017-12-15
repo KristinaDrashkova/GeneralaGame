@@ -8,9 +8,8 @@ import java.io.BufferedReader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameServiceImpl implements GameService {
     private static final int NUMBER_OF_DICE = 5;
@@ -53,7 +52,11 @@ public class GameServiceImpl implements GameService {
                 }
             }
         }
-        Collections.sort(new ArrayList<>(game.getPlayers().keySet()));
+
+        //sets sorted by player result map
+        game.setPlayers(game.getPlayers().entrySet().stream().sorted(Map.Entry.comparingByKey(Player::compareTo))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new)));
         if (winner == null) {
             winner = (new ArrayList<>(game.getPlayers().keySet())).get(0);
         }

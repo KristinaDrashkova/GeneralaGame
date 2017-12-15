@@ -5,17 +5,14 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 public class CombinationTest {
-    private List<Combination> combinations = new ArrayList<>(EnumSet.allOf(Combination.class));
+    private List<Combination> combinations = Arrays.asList(Combination.values());
 
     @Test
     public void calculateShouldWorkCorrectlyWithGeneralaCombination() {
-        List<Integer> dice = new ArrayList<>(Arrays.asList(6, 6, 6, 6, 6));
+        List<Integer> dice = Arrays.asList(6, 6, 6, 6, 6);
         int maxResult = 0;
         for (Combination combination : combinations) {
             int result = combination.calculate(dice);

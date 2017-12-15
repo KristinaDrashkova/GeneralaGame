@@ -7,7 +7,7 @@ import java.util.*;
 public class Game {
     private int rounds;
     private int numberOfDice;
-    private Map<Player, List<Combination>> players = new HashMap<>();
+    private Map<Player, List<Combination>> players = new LinkedHashMap<>();
 
     public int getRounds() {
         return rounds;
