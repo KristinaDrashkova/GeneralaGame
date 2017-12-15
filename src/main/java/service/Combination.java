@@ -11,6 +11,10 @@ public enum Combination {
     DOUBLE_PAIR(15),
     PAIR(10);
 
+    public int getConstant() {
+        return constant;
+    }
+
     private int constant;
 
     Combination(int i) {
@@ -125,7 +129,7 @@ public enum Combination {
         int result = 0;
         for (Integer key : diceOccurrences.keySet()) {
             int value = diceOccurrences.get(key);
-            if (value == 3) {
+            if (value == 5 || value == 4 || value == 3) {
                 result = 3 * key;
             }
         }
@@ -138,7 +142,11 @@ public enum Combination {
         int secondPairKey = 0;
         for (Integer key : diceOccurrences.keySet()) {
             int value = diceOccurrences.get(key);
-            if (value == 2) {
+            if (value == 4) {
+                firstPairKey = key;
+                secondPairKey = key;
+            }
+            if (value == 3 || value == 2) {
                 if (firstPairKey == 0) {
                     firstPairKey = key;
                 } else {
@@ -157,7 +165,7 @@ public enum Combination {
         int maxPairKey = 0;
         for (Integer key : diceOccurrences.keySet()) {
             int value = diceOccurrences.get(key);
-            if (value == 2) {
+            if (value == 4 || value== 3 || value == 2) {
                 if (maxPairKey < key) {
                     maxPairKey = key;
                 }

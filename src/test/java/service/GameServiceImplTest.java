@@ -32,7 +32,7 @@ public class GameServiceImplTest {
                 .thenReturn(Arrays.asList(1, 2, 3, 3, 2))
                 .thenReturn(Arrays.asList(2, 3, 4, 4, 4));
         GameService gameService = new GameServiceImpl(mockedDiceService);
-        Whitebox.setInternalState(gameService, "bufferedReader" , mockedReader);
+        Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
         int expectedFirstPlayerScore = 74;
@@ -56,15 +56,20 @@ public class GameServiceImplTest {
                 .thenReturn(repeatName)
                 .thenReturn(secondPlayerName);
         Mockito.when(mockedDiceService.roll(5))
-                .thenReturn(Arrays.asList(2, 3, 4, 3, 4))
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1))
                 .thenReturn(Arrays.asList(1, 2, 3, 4, 5))
-                .thenReturn(Arrays.asList(2, 3, 4, 4, 4))
-                .thenReturn(Arrays.asList(1, 2, 3, 3, 2));
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 3))
+                .thenReturn(Arrays.asList(1, 2, 3, 3, 2))
+                .thenReturn(Arrays.asList(3, 4, 3, 3, 3))
+                .thenReturn(Arrays.asList(1, 2, 3, 4, 5))
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1))
+                .thenReturn(Arrays.asList(5, 2, 2, 4, 5))
+                .thenReturn(Arrays.asList(5, 2, 2, 4, 5));
         GameService gameService = new GameServiceImpl(mockedDiceService);
-        Whitebox.setInternalState(gameService, "bufferedReader" , mockedReader);
+        Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
-        int expectedFirstPlayerScore = 86;
+        int expectedFirstPlayerScore = 142;
         Player winner = new ArrayList<>(game.getPlayers().keySet()).get(0);
         Assert.assertEquals(expectedFirstPlayerScore, winner.getResult());
     }
@@ -87,7 +92,7 @@ public class GameServiceImplTest {
         Mockito.when(mockedDiceService.roll(5))
                 .thenReturn(Arrays.asList(2, 2, 2, 2, 2));
         GameService gameService = new GameServiceImpl(mockedDiceService);
-        Whitebox.setInternalState(gameService, "bufferedReader" , mockedReader);
+        Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
         int expectedFirstPlayerScore = 60;
@@ -102,7 +107,7 @@ public class GameServiceImplTest {
         BufferedReader mockedReader = Mockito.mock(BufferedReader.class);
         Mockito.when(mockedReader.readLine()).thenThrow(IOException.class);
         GameService gameService = new GameServiceImpl(mockedDiceService);
-        Whitebox.setInternalState(gameService, "bufferedReader" , mockedReader);
+        Whitebox.setInternalState(gameService, "bufferedReader", mockedReader);
         gameService.play();
     }
 }
