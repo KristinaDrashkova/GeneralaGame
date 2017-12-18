@@ -3,7 +3,6 @@ package entities;
 import service.Combination;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Game {
     private int rounds;
