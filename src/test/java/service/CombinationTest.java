@@ -13,9 +13,8 @@ import static service.Combination.*;
 
 @RunWith(value = Parameterized.class)
 public class CombinationTest {
-    private List<Combination> combinations = Arrays.asList(Combination.values());
 
-    @Parameterized.Parameter()
+    @Parameterized.Parameter(value = 0)
     public List<Integer> diceList;
 
     @Parameterized.Parameter(value = 1)
@@ -43,17 +42,6 @@ public class CombinationTest {
 
     @Test
     public void testCombinationsCalculate() {
-        int maxResult = 0;
-        Combination selectedCombination = null;
-        for (Combination combination : combinations) {
-            int result = combination.calculate(diceList);
-            if (result > maxResult) {
-                maxResult = result;
-                selectedCombination = combination;
-            }
-        }
-
-        Assert.assertEquals(expectedResult, maxResult);
-        Assert.assertEquals(expectedCombination, selectedCombination);
+        Assert.assertEquals(expectedCombination.calculate(diceList), expectedResult);
     }
 }

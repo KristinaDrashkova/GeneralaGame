@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameServiceImpl implements GameService {
     private static final int NUMBER_OF_DICE = 5;
@@ -53,12 +52,8 @@ public class GameServiceImpl implements GameService {
             }
         }
 
-        //sets sorted by player result map
-        game.setPlayers(game.getPlayers().entrySet().stream().sorted(Map.Entry.comparingByKey(Player::compareTo))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (oldValue, newValue) -> oldValue, LinkedHashMap::new)));
         if (winner == null) {
-            winner = (new ArrayList<>(game.getPlayers().keySet())).get(0);
+            winner = game.getWinner();
         }
         System.out.println(String.format("The winner is: %s with score: %d", winner.getName(), winner.getResult()));
     }

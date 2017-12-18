@@ -24,11 +24,13 @@ public enum Combination {
     public int calculate(List<Integer> dice) {
         TreeMap<Integer, Integer> diceOccurrences = new TreeMap<>(Comparator.reverseOrder());
         for (Integer die : dice) {
-            if (!diceOccurrences.containsKey(die)) {
-                diceOccurrences.put(die, 0);
+            Integer dieValue = diceOccurrences.get(die);
+            if (dieValue != null) {
+                diceOccurrences.put(die, dieValue + 1);
+            } else {
+                diceOccurrences.put(die, 1);
             }
-            int value = diceOccurrences.get(die) + 1;
-            diceOccurrences.put(die, value);
+
         }
         int result = 0;
         switch (this) {
@@ -65,25 +67,11 @@ public enum Combination {
     }
 
     private int getResultFromGeneralaCombination(TreeMap<Integer, Integer> diceOccurrences) {
-        int result = 0;
-        for (Integer key : diceOccurrences.keySet()) {
-            int value = diceOccurrences.get(key);
-            if (value == 5) {
-                result = 5 * key;
-            }
-        }
-        return result;
+        return calculateResultFromEquals(diceOccurrences, 5);
     }
 
     private int getResultFromFourCombination(TreeMap<Integer, Integer> diceOccurrences) {
-        int result = 0;
-        for (Integer key : diceOccurrences.keySet()) {
-            int value = diceOccurrences.get(key);
-            if (value == 4) {
-                result = 4 * key;
-            }
-        }
-        return result;
+        return calculateResultFromEquals(diceOccurrences, 4);
     }
 
     private int getResultFromStraightCombination(TreeMap<Integer, Integer> diceOccurrences) {
@@ -110,7 +98,8 @@ public enum Combination {
         int result = 0;
         int tripleKey = 0;
         int pairKey = 0;
-        for (Integer key : diceOccurrences.keySet()) {
+        for (Map.Entry<Integer, Integer> integerIntegerEntry : diceOccurrences.entrySet()) {
+            int key = integerIntegerEntry.getKey();
             int value = diceOccurrences.get(key);
             if (value == 3) {
                 tripleKey = key;
@@ -126,22 +115,16 @@ public enum Combination {
     }
 
     private int getResultFromTripleCombination(TreeMap<Integer, Integer> diceOccurrences) {
-        int result = 0;
-        for (Integer key : diceOccurrences.keySet()) {
-            int value = diceOccurrences.get(key);
-            if (value == 5 || value == 4 || value == 3) {
-                result = 3 * key;
-            }
-        }
-        return result;
+        return calculateResultFromEquals(diceOccurrences, 3);
     }
 
     private int getResultFromDoublePairCombination(TreeMap<Integer, Integer> diceOccurrences) {
         int result = 0;
         int firstPairKey = 0;
         int secondPairKey = 0;
-        for (Integer key : diceOccurrences.keySet()) {
-            int value = diceOccurrences.get(key);
+        for (Map.Entry<Integer, Integer> integerIntegerEntry : diceOccurrences.entrySet()) {
+            int key = integerIntegerEntry.getKey();
+            int value = integerIntegerEntry.getValue();
             if (value == 4) {
                 firstPairKey = key;
                 secondPairKey = key;
@@ -161,19 +144,17 @@ public enum Combination {
     }
 
     private int getResultFromPairCombination(TreeMap<Integer, Integer> diceOccurrences) {
-        int result = 0;
-        int maxPairKey = 0;
-        for (Integer key : diceOccurrences.keySet()) {
-            int value = diceOccurrences.get(key);
-            if (value == 4 || value == 3 || value == 2) {
-                if (maxPairKey < key) {
-                    maxPairKey = key;
-                }
+        return calculateResultFromEquals(diceOccurrences, 2);
+    }
+
+    private int calculateResultFromEquals(TreeMap<Integer, Integer> diceOccurrences, int count) {
+        for (Map.Entry<Integer, Integer> integerIntegerEntry : diceOccurrences.entrySet()) {
+            int value = integerIntegerEntry.getValue();
+            if (value >= count) {
+                int key = integerIntegerEntry.getKey();
+                return count * key;
             }
         }
-        if (maxPairKey != 0) {
-            result = 2 * maxPairKey;
-        }
-        return result;
+        return 0;
     }
 }

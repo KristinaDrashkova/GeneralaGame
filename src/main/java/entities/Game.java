@@ -3,6 +3,7 @@ package entities;
 import service.Combination;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
     private int rounds;
@@ -36,5 +37,9 @@ public class Game {
     public void addPlayer(Player player) {
         List<Combination> combinations = new ArrayList<>(EnumSet.allOf(Combination.class));
         this.players.put(player, combinations);
+    }
+
+    public Player getWinner() {
+        return players.keySet().stream().sorted(Player::compareTo).collect(Collectors.toList()).get(0);
     }
 }
