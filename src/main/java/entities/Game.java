@@ -40,6 +40,9 @@ public class Game {
     }
 
     public Player getWinner() {
-        return players.keySet().stream().sorted(Player::compareTo).collect(Collectors.toList()).get(0);
+        if (players.isEmpty()) {
+            return null;
+        }
+        return (new TreeSet<>(players.keySet())).first();
     }
 }

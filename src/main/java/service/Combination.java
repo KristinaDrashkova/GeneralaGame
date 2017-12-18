@@ -147,12 +147,12 @@ public enum Combination {
         return calculateResultFromEquals(diceOccurrences, 2);
     }
 
-    private int calculateResultFromEquals(TreeMap<Integer, Integer> diceOccurrences, int count) {
-        for (Map.Entry<Integer, Integer> integerIntegerEntry : diceOccurrences.entrySet()) {
-            int value = integerIntegerEntry.getValue();
-            if (value >= count) {
-                int key = integerIntegerEntry.getKey();
-                return count * key;
+    private int calculateResultFromEquals(TreeMap<Integer, Integer> diceOccurrences, int desiredNumberOfOccurrences) {
+        for (Map.Entry<Integer, Integer> dieOccurrencesEntry : diceOccurrences.entrySet()) {
+            int occurrences = dieOccurrencesEntry.getValue();
+            if (occurrences >= desiredNumberOfOccurrences) {
+                int die = dieOccurrencesEntry.getKey();
+                return desiredNumberOfOccurrences * die;
             }
         }
         return 0;

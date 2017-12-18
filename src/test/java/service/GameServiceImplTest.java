@@ -28,29 +28,84 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void playShouldWorkCorrectlyWithNormalData() throws IOException {
+    public void playShouldWorkCorrectlyWithAllCombinationsExceptGenerala() throws IOException {
         initializeBufferedReaderWithNormalData();
-        initializeDiceServiceWithAllCombinationsExceptGenerala();
+        Mockito.when(mockedDiceService.roll(5))
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //adds 60 points(four of a kind)
+                .thenReturn(Arrays.asList(4, 4, 4, 4, 5)) //adds 56 points(four of a kind)
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //adds 35 points(triple)
+                .thenReturn(Arrays.asList(1, 3, 3, 3, 2)) //adds 29 points(triple)
+                .thenReturn(Arrays.asList(3, 4, 3, 3, 3)) //adds 27 points(double pair)
+                .thenReturn(Arrays.asList(2, 2, 2, 2, 1)) //adds 23 points(double pair)
+                .thenReturn(Arrays.asList(1, 2, 3, 5, 6)) //nothing
+                .thenReturn(Arrays.asList(2, 3, 4, 6, 1)) //nothing
+                .thenReturn(Arrays.asList(2, 3, 4, 5, 6)) //adds 50 points(straight)
+                .thenReturn(Arrays.asList(1, 2, 3, 4, 5)) //adds 45 points(straight)
+                .thenReturn(Arrays.asList(5, 5, 5, 1, 1)) //adds 42 points(full house)
+                .thenReturn(Arrays.asList(5, 2, 2, 2, 5)) //adds 41 points(full house)
+                .thenReturn(Arrays.asList(5, 2, 2, 4, 5)) //adds 20 points(pair)
+                .thenReturn(Arrays.asList(1, 1, 2, 2, 2)); //adds 14 points(pair)
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
-        int expectedFirstPlayerScore = 234;
+        int expectedWinnerScore = 234;
         Player winner = game.getWinner();
         List<Combination> combinations = game.getPlayers().get(winner);
-        Assert.assertEquals(expectedFirstPlayerScore, winner.getResult());
+        Assert.assertEquals(expectedWinnerScore, winner.getResult());
         Assert.assertEquals(1, combinations.size());
         Assert.assertEquals(combinations.get(0), Combination.GENERALA);
     }
 
     @Test
-    public void initializeShouldWorkCorrectlyWithWrongData() throws IOException {
-        initializeBufferedReaderWithWrongData();
-        initializeDiceServiceWithAllCombinationsExceptGenerala();
+    public void playShouldWorkCorrectlyWithSomeCombinations() throws IOException {
+        initializeBufferedReaderWithNormalData();
+        Mockito.when(mockedDiceService.roll(5))
+                .thenReturn(Arrays.asList(4, 4, 4, 4, 1)) //adds 56 points(four of a kind)
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //adds 60 points(four of a kind)
+                .thenReturn(Arrays.asList(4, 4, 4, 4, 1)) //adds 32 points(triple)
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //adds 35 points(triple)
+                .thenReturn(Arrays.asList(4, 4, 4, 4, 1)) //adds 31 points(double pair)
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //adds 35 points(double pair)
+                .thenReturn(Arrays.asList(4, 4, 4, 4, 1)) //adds 18 points(pair)
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //adds 20 points(pair)
+                .thenReturn(Arrays.asList(4, 4, 4, 4, 1)) //nothing
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //nothing
+                .thenReturn(Arrays.asList(4, 4, 4, 4, 1)) //nothing
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //nothing
+                .thenReturn(Arrays.asList(4, 4, 4, 4, 1)) //nothing
+                .thenReturn(Arrays.asList(5, 5, 5, 5, 1));//nothing
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
-        int numberOfPlayers = game.getPlayers().size();
+        int expectedWinnerScore = 150;
+        Player winner = game.getWinner();
+        List<Combination> combinations = game.getPlayers().get(winner);
+        Assert.assertEquals(expectedWinnerScore, winner.getResult());
+        Assert.assertEquals(3, combinations.size());
+        Assert.assertEquals(combinations.get(0), Combination.GENERALA);
+    }
+
+    @Test
+    public void initializeShouldWorkCorrectlyWithWrongData() throws IOException {
+        String wrongNumberOfPlayers = "-2";
+        String invalidNumberOfPlayers = "ABC";
+        String numberOfPlayers = "2";
+        String firstPlayerName = "A";
+        String repeatName = "A";
+        String secondPlayerName = "B";
+        Mockito.when(mockedReader.readLine())
+                .thenReturn(wrongNumberOfPlayers)
+                .thenReturn(invalidNumberOfPlayers)
+                .thenReturn(numberOfPlayers)
+                .thenReturn(firstPlayerName)
+                .thenReturn(repeatName)
+                .thenReturn(secondPlayerName);
+        Mockito.when(mockedDiceService.roll(5))
+                .thenReturn(Arrays.asList(2, 2, 2, 2, 2));
+        gameService.play();
+        Game game = (Game) Whitebox.getInternalState(gameService, "game");
+        int numberOfPlayersInGame = game.getPlayers().size();
         String playerOneName = game.getPlayers().keySet().toArray(new Player[0])[0].getName();
         String playerTwoName = game.getPlayers().keySet().toArray(new Player[0])[1].getName();
-        Assert.assertEquals(2, numberOfPlayers);
+        Assert.assertEquals(2, numberOfPlayersInGame);
         Assert.assertEquals("A", playerOneName);
         Assert.assertEquals("B", playerTwoName);
     }
@@ -59,12 +114,17 @@ public class GameServiceImplTest {
     public void gameShouldEndWithGeneralaScore() throws IOException {
         initializeBufferedReaderWithNormalData();
         Mockito.when(mockedDiceService.roll(5))
+                .thenReturn(Arrays.asList(2, 2, 2, 2, 2))
+                .thenReturn(Arrays.asList(2, 2, 2, 2, 2))
+                .thenReturn(Arrays.asList(2, 2, 2, 2, 2))
                 .thenReturn(Arrays.asList(2, 2, 2, 2, 2));
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
-        int expectedFirstPlayerScore = 60;
+        int expectedWinnerScore = 60;
         Player winner = game.getWinner();
-        Assert.assertEquals(expectedFirstPlayerScore, winner.getResult());
+        List<Combination> combinations = game.getPlayers().get(winner);
+        Assert.assertEquals(6, combinations.size());
+        Assert.assertEquals(expectedWinnerScore, winner.getResult());
     }
 
     @SuppressWarnings("unchecked")
@@ -78,7 +138,8 @@ public class GameServiceImplTest {
     @Test
     public void gameInitializeShouldWorkCorrectlyWithNormalData() throws IOException {
         initializeBufferedReaderWithNormalData();
-        initializeDiceServiceWithAllCombinationsExceptGenerala();
+        Mockito.when(mockedDiceService.roll(5))
+                .thenReturn(Arrays.asList(2, 2, 2, 2, 2));
         gameService.play();
         Game game = (Game) Whitebox.getInternalState(gameService, "game");
         int numberOfPlayers = game.getPlayers().size();
@@ -97,39 +158,5 @@ public class GameServiceImplTest {
                 .thenReturn(numberOfPlayers)
                 .thenReturn(firstPlayerName)
                 .thenReturn(secondPlayerName);
-    }
-
-    private void initializeBufferedReaderWithWrongData() throws IOException {
-        String wrongNumberOfPlayers = "-2";
-        String invalidNumberOfPlayers = "ABC";
-        String numberOfPlayers = "2";
-        String firstPlayerName = "A";
-        String repeatName = "A";
-        String secondPlayerName = "B";
-        Mockito.when(mockedReader.readLine())
-                .thenReturn(wrongNumberOfPlayers)
-                .thenReturn(invalidNumberOfPlayers)
-                .thenReturn(numberOfPlayers)
-                .thenReturn(firstPlayerName)
-                .thenReturn(repeatName)
-                .thenReturn(secondPlayerName);
-    }
-
-    private void initializeDiceServiceWithAllCombinationsExceptGenerala() {
-        Mockito.when(mockedDiceService.roll(5))
-                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //adds 60 points(four of a kind)
-                .thenReturn(Arrays.asList(4, 4, 4, 4, 5)) //adds 56 points(four of a kind)
-                .thenReturn(Arrays.asList(5, 5, 5, 5, 1)) //adds 35 points(triple)
-                .thenReturn(Arrays.asList(1, 3, 3, 3, 2)) //adds 29 points(triple)
-                .thenReturn(Arrays.asList(3, 4, 3, 3, 3)) //adds 27 points(double pair)
-                .thenReturn(Arrays.asList(2, 2, 2, 2, 1)) //adds 23 points(double pair)
-                .thenReturn(Arrays.asList(1, 2, 3, 5, 6)) //nothing
-                .thenReturn(Arrays.asList(2, 3, 4, 6, 1)) //nothing
-                .thenReturn(Arrays.asList(2, 3, 4, 5, 6)) //adds 50 points(straight)
-                .thenReturn(Arrays.asList(1, 2, 3, 4, 5)) //adds 45 points(straight)
-                .thenReturn(Arrays.asList(5, 5, 5, 1, 1)) //adds 42 points(full house)
-                .thenReturn(Arrays.asList(5, 2, 2, 2, 5)) //adds 41 points(full house)
-                .thenReturn(Arrays.asList(5, 2, 2, 4, 5)) //adds 20 points(pair)
-                .thenReturn(Arrays.asList(1, 1, 2, 2, 2)); //adds 14 points(pair)
     }
 }
